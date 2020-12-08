@@ -1,0 +1,31 @@
+{
+  "name": "@hexlet/code",
+  "version": "0.0.1",
+  "description": "frontend-project-lvl2",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "gendiff": "bin/gendiff.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://artemkrv:a97be016e5701acb43d2779e98168542cd1f8d42@github.com/CrKot/frontend-project-lvl2.git"
+  },
+  "author": "Artem_Krv",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CrKot/frontend-project-lvl2/issues"
+  },
+  "homepage": "https://github.com/CrKot/frontend-project-lvl2#readme",
+  "devDependencies": {
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0"
+  },
+  "dependencies": {
+    "commander": "^6.2.0"
+  }
+}
