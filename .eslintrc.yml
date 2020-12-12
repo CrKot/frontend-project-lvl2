@@ -1,10 +1,15 @@
 ---
 
+plugins:
+  - jest
+
 env:
   node: true
+  es2020: true
 
 extends:
   - 'airbnb-base'
+  - 'plugin:jest/recommended'
 
 rules:
   no-console: 0

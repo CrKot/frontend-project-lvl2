@@ -2,4 +2,6 @@
 
 import gendiff from '../src/index.js';
 
-gendiff();
+const genDiff = gendiff;
+
+export default genDiff;
