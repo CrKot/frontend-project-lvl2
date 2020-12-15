@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-import gendiff from '../src/index.js';
+import gendiff from '../src/gendiff.js';
 
-const genDiff = gendiff;
-
-export default genDiff;
+export default gendiff.parse(process.argv);

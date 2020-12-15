@@ -5,7 +5,6 @@ import getFullPathFile from './getFullPathFile.js';
 import getSortedObject from './getSortedObject.js';
 
 const gendiff = new commander.Command();
-
 gendiff
   .version('0.0.1')
   .description('Compares two configuration files and shows a difference.')
@@ -43,10 +42,7 @@ gendiff
       });
       return result;
     };
-
-    return JSON.stringify(console.log(diff(sortedFile1, sortedFile2)));
+    return diff(sortedFile1, sortedFile2);
   });
-
-gendiff.parse(process.argv);
 
 export default gendiff;

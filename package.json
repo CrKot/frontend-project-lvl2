@@ -2,9 +2,12 @@
   "name": "@hexlet/code",
   "version": "0.0.1",
   "description": "frontend-project-lvl2",
-  "main": "bin/gendiff.js",
+  "main": "./index.js",
   "bin": {
     "gendiff": "bin/gendiff.js"
+  },
+  "engines": {
+    "node": ">=14"
   },
   "scripts": {
     "test": "npx jest"
