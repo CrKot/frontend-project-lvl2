@@ -1,10 +1,10 @@
 import path from 'path';
 
-const getFullPathFile = (pathFile) => pathFile.map((args) => {
-  if (!args.startsWith('/home')) {
-    return `${process.cwd()}${path.resolve(args)}`;
+const getFullPathFile = (pathFile) => {
+  if (!pathFile.startsWith('/home')) {
+    return `${process.cwd()}${path.resolve(pathFile)}`;
   }
-  return args;
-});
+  return pathFile;
+};
 
 export default getFullPathFile;
