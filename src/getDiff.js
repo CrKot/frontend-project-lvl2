@@ -1,8 +1,9 @@
 import _ from 'lodash';
 
 const getDiff = (file1, file2) => {
-  const keys = (_.union(_.keys(file2), _.keys(file1))).sort();
-  const ast = keys.map((key) => {
+  const keys = _.union(_.keys(file2), _.keys(file1));
+  const sortedKeys = _.sortBy(keys);
+  const ast = sortedKeys.map((key) => {
     const elementFile1 = file1[key];
     const elementFile2 = file2[key];
     if (_.isEqual(elementFile1, elementFile2)) {
