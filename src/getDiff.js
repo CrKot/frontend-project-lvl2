@@ -1,53 +1,26 @@
 import _ from 'lodash';
-import getParseFile from './parsers.js';
-import getJsonTree from './getJsonTree.js';
 
-const getDiff = (pathToFile1, pathToFile2) => {
-  const parseFile1 = getParseFile(pathToFile1);
-  const parseFile2 = getParseFile(pathToFile2);
-  const uniqKeys = (key1, key2) => _.uniq(_.keys(key1).concat(_.keys(key2)));
-  const diff = (file1, file2) => {
-    const keys = (uniqKeys(file1, file2)).sort();
-    const ast = keys.reduce((acc, key) => {
-      const result = { key };
-      // if (_.isObject(file1[key])) {
-      //   result.children = file2[key] ? diff(file1[key], file2[key]) : _.cloneDeep(file1[key]);
-      // }
-      // if (_.isObject(file2[key])) {
-      //   result.children = file1[key] ? diff(file1[key], file2[key]) : _.cloneDeep(file2[key]);
-      // }
-      if (_.isObject(file1[key]) && _.isObject(file2[key])) {
-        result.status = 'unchanged';
-        result.children = diff(file1[key], file2[key]);
-        acc.push(result);
-        return acc;
-      }
-      if (file1[key] !== undefined && file2[key] !== undefined
-        && file1[key] !== file2[key]) {
-        result.status = 'changed';
-        result.valueFile = file1[key];
-        result.valueFile2 = file2[key];
-      }
-      if (file1[key] !== undefined && file2[key] === undefined) {
-        result.status = 'removed';
-        result.valueFile = file1[key];
-      }
-      if (file1[key] === undefined && file2[key] !== undefined) {
-        result.status = 'added';
-        result.valueFile = file2[key];
-      }
-      if (file1[key] === file2[key]) {
-        result.status = 'unchanged';
-        result.valueFile = file2[key];
-      }
-      acc.push(result);
-      return acc;
-    }, []);
-    return ast;
-  };
-  const test1 = diff(parseFile1, parseFile2);
-  //  console.log(JSON.stringify(test1, null, 4))
-  return getJsonTree(test1);
+const getDiff = (file1, file2) => {
+  const keys = (_.union(_.keys(file2), _.keys(file1))).sort();
+  const ast = keys.map((key) => {
+    const elementFile1 = file1[key];
+    const elementFile2 = file2[key];
+    if (_.isEqual(elementFile1, elementFile2)) {
+      return { key, status: 'unchange', value: elementFile1 };
+    }
+    if (_.isObject(elementFile1) && _.isObject(elementFile2)) {
+      return { key, status: 'pass', children: getDiff(elementFile1, elementFile2) };
+    }
+    if (elementFile1 !== undefined && elementFile2 !== undefined && elementFile1 !== elementFile2) {
+      return {
+        key, status: 'update', valueDeleted: elementFile1, valueAdded: elementFile2,
+      };
+    }
+    return elementFile1 === undefined
+      ? { key, status: 'added', value: elementFile2 }
+      : { key, status: 'removed', value: elementFile1 };
+  });
+  return ast;
 };
 
-export default getDiff;
+export default (pathToFile1, pathToFile2) => getDiff(pathToFile1, pathToFile2);
