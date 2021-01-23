@@ -10,13 +10,13 @@
 gendiff - сравнение 2 файлов и вывод различий в консоль в 3 различных форматах stylish, plain, json.<br/>
 Выбор формата через флаг -f <формат>, по умолчанию stylish.
 #### Установка:
-``
+````
 $ npm install
 $ npm link
-``
+````
 Пример работы программы:
 "gendiff <путь к 1 файлу> <путь к 2 файлу>"
-``
+````
 gendiff __fixtures__/file1.json __fixtures__/file2.json
 
   {
@@ -27,7 +27,7 @@ gendiff __fixtures__/file1.json __fixtures__/file2.json
     + timeout: 20
     + verbose: true
   }
-``
+````
 
 ## Сравнение двух плоских json вывод в формате по умолчанию stylish
 [![asciicast](https://asciinema.org/a/YDm08TYFciPrRUiw8vjfpfMkv.svg)](https://asciinema.org/a/YDm08TYFciPrRUiw8vjfpfMkv)
