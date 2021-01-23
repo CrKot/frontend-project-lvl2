@@ -53,7 +53,7 @@ test('gendiff recursion JSON format Plain', () => {
   expect(result).toEqual(testExpect);
 });
 
-test('JSON format', () => {
+test('gendiff recursion format json', () => {
   const testExpect = getFile(getFixturePath('jsonComplexExpected.json'));
   const result = gendiff(recursionTree1Yml, recursionTree2Yml, 'json');
 
