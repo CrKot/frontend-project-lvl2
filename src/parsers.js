@@ -1,15 +1,12 @@
 import fs from 'fs';
 import YAML from 'yaml';
-import path from 'path';
 
-export default (file) => {
-  const format = path.extname(file);
-  const pathFile = path.resolve(process.cwd(), file);
-  switch (format) {
+export default (filePath, formatFile) => {
+  switch (formatFile) {
     case '.json':
-      return JSON.parse(fs.readFileSync(pathFile, 'utf8'));
+      return JSON.parse(fs.readFileSync(filePath, 'utf8'));
     case '.yml':
-      return YAML.parse(fs.readFileSync(pathFile, 'utf8'));
+      return YAML.parse(fs.readFileSync(filePath, 'utf8'));
     default:
       throw new Error('unknown format or non-existent file');
   }

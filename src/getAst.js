@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const getDiff = (file1, file2) => {
+const getAst = (file1, file2) => {
   const keys = _.union(_.keys(file2), _.keys(file1));
   const sortedKeys = _.sortBy(keys);
   const ast = sortedKeys.map((key) => {
@@ -10,7 +10,7 @@ const getDiff = (file1, file2) => {
       return { key, status: 'unchange', value: elementFile1 };
     }
     if (_.isObject(elementFile1) && _.isObject(elementFile2)) {
-      return { key, status: 'pass', children: getDiff(elementFile1, elementFile2) };
+      return { key, status: 'pass', children: getAst(elementFile1, elementFile2) };
     }
     if (elementFile1 !== undefined && elementFile2 !== undefined && elementFile1 !== elementFile2) {
       return {
@@ -24,4 +24,4 @@ const getDiff = (file1, file2) => {
   return ast;
 };
 
-export default (pathToFile1, pathToFile2) => getDiff(pathToFile1, pathToFile2);
+export default (pathToFile1, pathToFile2) => getAst(pathToFile1, pathToFile2);

@@ -1,5 +1,5 @@
 // @ts-check
 
-import gendiff from './src/index.js';
+import getFormattedDifference from './src/index.js';
 
-export default gendiff;
+export default getFormattedDifference;
