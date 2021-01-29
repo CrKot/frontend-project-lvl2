@@ -7,28 +7,26 @@ const getString = (value) => {
   return typeof value === 'string' ? `'${value}'` : value;
 };
 
-const getPlain = (ast) => {
-  const render = (element, path) => {
+export default (ast) => {
+  const render = (node, path) => {
     const {
-      key, status, children, value, valueAdded, valueDeleted,
-    } = element;
+      key, type, children, value, addedValue, deletedValue,
+    } = node;
     const fullPath = [...path, key];
-    if (status === 'pass') {
-      const string = (children.flatMap((element1) => render(element1, fullPath))).join('\n');
+    if (type === 'added') {
+      return `Property '${fullPath.join('.')}' was ${type} with value: ${getString(value)}`;
+    }
+    if (type === 'removed') {
+      return `Property '${fullPath.join('.')}' was removed`;
+    }
+    if (type === 'nested') {
+      const string = (children.flatMap((childrenNode) => render(childrenNode, fullPath))).join('\n');
       return string;
     }
-    if (status === 'added') {
-      return `Property '${fullPath.join('.')}' was ${status} with value: ${getString(value)}`;
-    }
-    if (status === 'update') {
-      return `Property '${fullPath.join('.')}' was updated. From ${getString(valueDeleted)} to ${getString(valueAdded)}`;
-    }
-    if (status === 'removed') {
-      return `Property '${fullPath.join('.')}' was removed`;
+    if (type === 'changed') {
+      return `Property '${fullPath.join('.')}' was updated. From ${getString(deletedValue)} to ${getString(addedValue)}`;
     }
     return [];
   };
-  return (ast.map((element) => render(element, []))).join('\n');
+  return (ast.map((node) => render(node, []))).join('\n');
 };
-
-export default (ast) => getPlain(ast);

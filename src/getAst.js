@@ -1,27 +1,28 @@
 import _ from 'lodash';
 
-const getAst = (file1, file2) => {
-  const keys = _.union(_.keys(file2), _.keys(file1));
+const getAst = (data1, data2) => {
+  const keys = _.union(_.keys(data2), _.keys(data1));
   const sortedKeys = _.sortBy(keys);
   const ast = sortedKeys.map((key) => {
-    const elementFile1 = file1[key];
-    const elementFile2 = file2[key];
-    if (_.isEqual(elementFile1, elementFile2)) {
-      return { key, status: 'unchange', value: elementFile1 };
+    const valueData1 = data1[key];
+    const valueData2 = data2[key];
+    if (valueData1 === undefined) {
+      return { key, type: 'added', value: valueData2 };
     }
-    if (_.isObject(elementFile1) && _.isObject(elementFile2)) {
-      return { key, status: 'pass', children: getAst(elementFile1, elementFile2) };
+    if (valueData2 === undefined) {
+      return { key, type: 'removed', value: valueData1 };
     }
-    if (elementFile1 !== undefined && elementFile2 !== undefined && elementFile1 !== elementFile2) {
+    if (_.isPlainObject(valueData1) && _.isPlainObject(valueData2)) {
+      return { key, type: 'nested', children: getAst(valueData1, valueData2) };
+    }
+    if (!_.isEqual(data1[key], data2[key])) {
       return {
-        key, status: 'update', valueDeleted: elementFile1, valueAdded: elementFile2,
+        key, type: 'changed', deletedValue: valueData1, addedValue: valueData2,
       };
     }
-    return elementFile1 === undefined
-      ? { key, status: 'added', value: elementFile2 }
-      : { key, status: 'removed', value: elementFile1 };
+    return { key, type: 'unchanged', value: valueData1 };
   });
   return ast;
 };
 
-export default (pathToFile1, pathToFile2) => getAst(pathToFile1, pathToFile2);
+export default getAst;

@@ -1,5 +1,6 @@
 import path from 'path';
-import getParseFile from './parsers.js';
+import fs from 'fs';
+import parseFile from './parsers.js';
 import getAst from './getAst.js';
 import formatter from './formatters/index.js';
 
@@ -10,9 +11,12 @@ export default (path1, path2, format = 'stylish') => {
   const filePath1 = path.resolve(process.cwd(), path1);
   const filePath2 = path.resolve(process.cwd(), path2);
 
-  const parseFile1 = getParseFile(filePath1, formatFile1);
-  const parseFile2 = getParseFile(filePath2, formatFile2);
-  const ast = getAst(parseFile1, parseFile2);
+  const readFile1 = fs.readFileSync(filePath1, 'utf8');
+  const readFile2 = fs.readFileSync(filePath2, 'utf8');
+
+  const data1 = parseFile(readFile1, formatFile1);
+  const data2 = parseFile(readFile2, formatFile2);
+  const ast = getAst(data1, data2);
 
   return formatter(ast, format);
 };

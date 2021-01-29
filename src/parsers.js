@@ -1,12 +1,11 @@
-import fs from 'fs';
 import YAML from 'yaml';
 
-export default (filePath, formatFile) => {
+export default (file, formatFile) => {
   switch (formatFile) {
     case '.json':
-      return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      return JSON.parse(file);
     case '.yml':
-      return YAML.parse(fs.readFileSync(filePath, 'utf8'));
+      return YAML.parse(file);
     default:
       throw new Error('unknown format or non-existent file');
   }

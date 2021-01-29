@@ -10,6 +10,7 @@ const getFixturePath = (filename) => path.join(__dirname, '..', '/', '__fixtures
 const readFile = (pathFile) => fs.readFileSync(pathFile, 'utf8');
 const expectPlain = readFile(getFixturePath('expectPlain.txt'));
 const expectStylish = readFile(getFixturePath('expectRecursionTree.txt'));
+const expectJson = readFile(getFixturePath('expectJson.json'));
 const recursionTree1Yml = getFixturePath('recursionTreeFile1.yml');
 const recursionTree2Yml = getFixturePath('recursionTreeFile2.yml');
 const recursionTree1Json = getFixturePath('complexFile1.json');
@@ -22,6 +23,7 @@ describe('gendiff', () => {
   ${recursionTree1Json} |${recursionTree2Json} | ${'plain'}   | ${expectPlain}  | ${'JSON plain'}
   ${recursionTree1Yml}  |${recursionTree2Yml}  | ${'stylish'} | ${expectStylish}| ${'Yml stylish'}
   ${recursionTree1Yml}  |${recursionTree2Yml}  | ${'plain'}   | ${expectPlain}  | ${'Yml plain'}
+  ${recursionTree1Json} |${recursionTree2Json} | ${'json'}    | ${expectJson}   | ${'Json To JSON.stringify'}
 `('$message',
     ({
       file1, file2, format, expectResult,
