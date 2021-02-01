@@ -1,11 +1,11 @@
 import YAML from 'yaml';
 
-export default (file, formatFile) => {
-  switch (formatFile) {
-    case '.json':
-      return JSON.parse(file);
-    case '.yml':
-      return YAML.parse(file);
+export default (data, format) => {
+  switch (format) {
+    case 'json':
+      return JSON.parse(data);
+    case 'yml':
+      return YAML.parse(data);
     default:
       throw new Error('unknown format or non-existent file');
   }

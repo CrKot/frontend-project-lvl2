@@ -1,18 +1,11 @@
 import _ from 'lodash';
 
-const sign = {
-  added: '+ ',
-  removed: '- ',
-  unchanged: '  ',
-  nested: '  ',
-};
-
 const getIndent = {
   open: (counter) => '  '.repeat(counter),
   close: (counter) => '  '.repeat(counter - 1),
 };
 const getStringify = (value, counter, render) => {
-  if (!_.isPlainObject(value)) {
+  if (!_.isObject(value)) {
     return value;
   }
   const keys = _.keys(value);
@@ -20,6 +13,7 @@ const getStringify = (value, counter, render) => {
     const newNode = { key, type: 'unchanged', value: value[key] };
     return render(newNode, counter + 2);
   });
+
   return `{\n${string.join('\n')}\n${getIndent.close(counter + 2)}}`;
 };
 
@@ -30,19 +24,26 @@ export default (ast, initialСounter = 0) => {
     } = node;
     const currenIndent = getIndent.open(counter);
     const closeIndent = getIndent.close(counter + 2);
-    if (type === 'nested') {
-      const string = children.flatMap((childrenNode) => render(childrenNode, counter + 2));
-      return `${currenIndent}${sign[type]}${key}: {\n${string.join('\n')}\n${closeIndent}}`;
+
+    switch (type) {
+      case 'nested': {
+        const string = children.flatMap((childrenNode) => render(childrenNode, counter + 2));
+        return `${currenIndent}  ${key}: {\n${string.join('\n')}\n${closeIndent}}`;
+      }
+      case 'changed':
+        return [`${currenIndent}- ${key}: ${getStringify(deletedValue, counter, render)}`,
+          `${currenIndent}+ ${key}: ${getStringify(addedValue, counter, render)}`].join('\n');
+      case 'added':
+        return [`${currenIndent}+ ${key}: ${getStringify(value, counter, render)}`];
+      case 'removed':
+        return [`${currenIndent}- ${key}: ${getStringify(value, counter, render)}`];
+      case 'unchanged':
+        return [`${currenIndent}  ${key}: ${getStringify(value, counter, render)}`];
+      default:
+        throw new Error(`unknown type node => ${type}`);
     }
-    if (type !== 'changed') {
-      return [`${currenIndent}${sign[type]}${key}: ${getStringify(value, counter, render)}`];
-    }
-    if (type === 'changed') {
-      return [`${currenIndent}${sign.removed}${key}: ${getStringify(deletedValue, counter, render)}`,
-        `${currenIndent}${sign.added}${key}: ${getStringify(addedValue, counter, render)}`].join('\n');
-    }
-    return [`${currenIndent}${sign[type]}${key}: ${getStringify(value, counter, render)}`];
   };
-  const string = ast.map((node) => render(node, initialСounter + 1));
-  return `{\n${string.join('\n')}\n}`;
+
+  const stylishFormat = ast.map((node) => render(node, initialСounter + 1));
+  return `{\n${stylishFormat.join('\n')}\n}`;
 };
